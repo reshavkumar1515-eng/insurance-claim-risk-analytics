@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Insurance Claim Risk Analytics – Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D1117; color: #E6EDF3; }
+  h1 { text-align: center; padding: 24px 0 4px; font-size: 24px; color: #58A6FF; }
+  .subtitle { text-align: center; color: #8B949E; font-size: 13px; margin-bottom: 20px; }
+  .canvas { max-width: 1300px; margin: 0 auto; padding: 10px 20px 30px; }
+
+  /* Layer container */
+  .layer { border: 1.5px solid #30363D; border-radius: 12px; margin: 12px 0;
+            padding: 10px 16px 14px; position: relative; }
+  .layer-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+                  text-transform: uppercase; position: absolute; top: -10px;
+                  left: 16px; padding: 0 8px; border-radius: 4px; }
+  .layer-source   { background:#161B22; border-color:#1F6FEB; }
+  .layer-source   .layer-title { background:#1F6FEB; color:#fff; }
+  .layer-ingest   { background:#161B22; border-color:#238636; }
+  .layer-ingest   .layer-title { background:#238636; color:#fff; }
+  .layer-staging  { background:#161B22; border-color:#6E40C9; }
+  .layer-staging  .layer-title { background:#6E40C9; color:#fff; }
+  .layer-dwh      { background:#161B22; border-color:#1F6FEB; }
+  .layer-dwh      .layer-title { background:#1F6FEB; color:#fff; }
+  .layer-proc     { background:#161B22; border-color:#E3B341; }
+  .layer-proc     .layer-title { background:#E3B341; color:#000; }
+  .layer-snow     { background:#161B22; border-color:#29BBE3; }
+  .layer-snow     .layer-title { background:#29BBE3; color:#000; }
+  .layer-viz      { background:#161B22; border-color:#F78166; }
+  .layer-viz      .layer-title { background:#F78166; color:#fff; }
+  .layer-sec      { background:#161B22; border-color:#DA3633; }
+  .layer-sec      .layer-title { background:#DA3633; color:#fff; }
+
+  .boxes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .box { border-radius: 8px; padding: 10px 14px; min-width: 130px; font-size: 12px;
+          border: 1px solid transparent; transition: transform 0.15s; cursor: default; }
+  .box:hover { transform: translateY(-2px); }
+  .box-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .box-detail { font-size: 10px; color: #8B949E; line-height: 1.4; }
+
+  /* Color themes for boxes */
+  .b-blue  { background:#1C2D47; border-color:#1F6FEB; color:#79C0FF; }
+  .b-green { background:#1B2E22; border-color:#238636; color:#56D364; }
+  .b-purple{ background:#24183A; border-color:#6E40C9; color:#BC8CFF; }
+  .b-yellow{ background:#2D2200; border-color:#E3B341; color:#E3B341; }
+  .b-cyan  { background:#0D2535; border-color:#29BBE3; color:#29BBE3; }
+  .b-red   { background:#2D1414; border-color:#DA3633; color:#FF7B72; }
+  .b-orange{ background:#2D1B00; border-color:#F78166; color:#F78166; }
+  .b-gray  { background:#1C2128; border-color:#30363D; color:#C9D1D9; }
+
+  /* Arrow */
+  .arrow { text-align: center; color: #30363D; font-size: 22px; margin: 2px 0; line-height: 1; }
+
+  /* Legend */
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0 10px;
+             justify-content: center; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8B949E; }
+  .leg-dot  { width: 12px; height: 12px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>🛡 Insurance Claim Risk Analytics – System Architecture</h1>
+<p class="subtitle">Wipro DAI-DATA Training | Project 9 | End-to-End Data Engineering Pipeline</p>
+
+<div class="canvas">
+
+  <!-- Layer 1: Data Sources -->
+  <div class="layer layer-source">
+    <div class="layer-title">Layer 1 – Data Sources</div>
+    <div class="boxes">
+      <div class="box b-blue">
+        <div class="box-title">📋 CRM System</div>
+        <div class="box-detail">Customer profiles, policies, transactions</div>
+      </div>
+      <div class="box b-blue">
+        <div class="box-title">🏥 Claims System</div>
+        <div class="box-detail">Claim records (CSV / DB tables)</div>
+      </div>
+      <div class="box b-blue">
+        <div class="box-title">🌐 External APIs</div>
+        <div class="box-detail">Credit bureau, geo-risk scores</div>
+      </div>
+      <div class="box b-blue">
+        <div class="box-title">📡 Kafka Topics</div>
+        <div class="box-detail">Real-time claim event streams</div>
+      </div>
+      <div class="box b-blue">
+        <div class="box-title">📂 File Drops</div>
+        <div class="box-detail">CSV, JSON, Parquet from partners</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ Extract (Batch + Streaming)</div>
+
+  <!-- Layer 2: Ingestion -->
+  <div class="layer layer-ingest">
+    <div class="layer-title">Layer 2 – Ingestion & Orchestration</div>
+    <div class="boxes">
+      <div class="box b-green">
+        <div class="box-title">🐍 Python ETL</div>
+        <div class="box-detail">Pandas pipelines<br>Decorators, retry, logging<br>CLI (argparse)</div>
+      </div>
+      <div class="box b-green">
+        <div class="box-title">❄️ Snowpipe</div>
+        <div class="box-detail">Auto-ingest from S3/GCS<br>COPY INTO staging<br>Event-driven</div>
+      </div>
+      <div class="box b-green">
+        <div class="box-title">⚡ Apache Kafka</div>
+        <div class="box-detail">Claim event streaming<br>Topic: claims-raw<br>Consumer groups</div>
+      </div>
+      <div class="box b-green">
+        <div class="box-title">🌀 Apache Airflow</div>
+        <div class="box-detail">DAG orchestration<br>SLA monitoring<br>Lineage tracking</div>
+      </div>
+      <div class="box b-green">
+        <div class="box-title">✅ Data Quality</div>
+        <div class="box-detail">Null checks, dedup<br>Range validation<br>DQ reports</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ Load to Staging</div>
+
+  <!-- Layer 3: Staging -->
+  <div class="layer layer-staging">
+    <div class="layer-title">Layer 3 – Staging (Raw Zone)</div>
+    <div class="boxes">
+      <div class="box b-purple">
+        <div class="box-title">🗂 stg_customers</div>
+        <div class="box-detail">Raw customer data<br>Load timestamp</div>
+      </div>
+      <div class="box b-purple">
+        <div class="box-title">📄 stg_policies</div>
+        <div class="box-detail">Policy records<br>Source system tag</div>
+      </div>
+      <div class="box b-purple">
+        <div class="box-title">📝 stg_claims</div>
+        <div class="box-detail">Claim transactions<br>Raw amounts</div>
+      </div>
+      <div class="box b-purple">
+        <div class="box-title">🔢 stg_agents</div>
+        <div class="box-detail">Agent master data</div>
+      </div>
+      <div class="box b-purple">
+        <div class="box-title">📊 VARIANT (JSON)</div>
+        <div class="box-detail">Semi-structured<br>Snowflake VARIANT<br>Nested fraud data</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ Transform (ELT / Spark)</div>
+
+  <!-- Layer 4: Processing -->
+  <div class="layer layer-proc">
+    <div class="layer-title">Layer 4 – Processing & Transformation</div>
+    <div class="boxes">
+      <div class="box b-yellow">
+        <div class="box-title">⚡ Spark Batch</div>
+        <div class="box-detail">DataFrame API<br>RDD: risk scoring<br>Broadcast joins<br>Parquet output</div>
+      </div>
+      <div class="box b-yellow">
+        <div class="box-title">🌊 Spark Streaming</div>
+        <div class="box-detail">Structured Streaming<br>Watermarks<br>Kafka → Fraud Alert<br>Tumbling windows</div>
+      </div>
+      <div class="box b-yellow">
+        <div class="box-title">🐍 Python Transform</div>
+        <div class="box-detail">Age/income bands<br>Payout ratios<br>Risk composite score<br>SCD Type 2</div>
+      </div>
+      <div class="box b-yellow">
+        <div class="box-title">🔧 SQL ELT</div>
+        <div class="box-detail">CTEs, Window Fns<br>ROLLUP / CUBE<br>MERGE (upsert)<br>EXPLAIN PLAN</div>
+      </div>
+      <div class="box b-yellow">
+        <div class="box-title">🤖 ML Scoring</div>
+        <div class="box-detail">Fraud score model<br>Risk classification<br>Anomaly detection</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ Load to Data Warehouse</div>
+
+  <!-- Layer 5: DWH -->
+  <div class="layer layer-dwh">
+    <div class="layer-title">Layer 5 – Data Warehouse (Star Schema)</div>
+    <div class="boxes">
+      <div class="box b-blue" style="flex:1; min-width:100px;">
+        <div class="box-title">📅 dim_date</div>
+        <div class="box-detail">Conformed date dim</div>
+      </div>
+      <div class="box b-blue" style="flex:1; min-width:120px;">
+        <div class="box-title">👤 dim_customers</div>
+        <div class="box-detail">SCD Type 2<br>Age/credit bands</div>
+      </div>
+      <div class="box b-blue" style="flex:1; min-width:120px;">
+        <div class="box-title">📋 dim_policy_type</div>
+        <div class="box-detail">Policy categories<br>Risk levels</div>
+      </div>
+      <div class="box b-blue" style="flex:1; min-width:100px;">
+        <div class="box-title">🤝 dim_agents</div>
+        <div class="box-detail">Region mapping<br>Performance</div>
+      </div>
+      <div class="box b-blue" style="flex:2; min-width:180px; border-color:#F78166; color:#F78166;">
+        <div class="box-title" style="color:#F78166;">⭐ fact_claims</div>
+        <div class="box-detail" style="color:#8B949E;">PARTITIONED by year<br>INDEXED: fraud, date, customer<br>Generated: rejected_amount<br>Materialized view: mv_claim_summary</div>
+      </div>
+      <div class="box b-blue" style="flex:2; min-width:160px;">
+        <div class="box-title">📑 fact_policies</div>
+        <div class="box-detail">Partitioned by start year<br>Clustering key: date<br>Policy duration</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ Snowflake Advanced Layer</div>
+
+  <!-- Layer 6: Snowflake -->
+  <div class="layer layer-snow">
+    <div class="layer-title">Layer 6 – Snowflake Cloud DWH</div>
+    <div class="boxes">
+      <div class="box b-cyan">
+        <div class="box-title">🧊 Clustering Keys</div>
+        <div class="box-detail">Auto re-clustering<br>Micro-partitions<br>Pruning efficiency</div>
+      </div>
+      <div class="box b-cyan">
+        <div class="box-title">⏰ Time Travel</div>
+        <div class="box-detail">AT/BEFORE syntax<br>90-day retention<br>Zero-copy clone</div>
+      </div>
+      <div class="box b-cyan">
+        <div class="box-title">📦 Semi-Structured</div>
+        <div class="box-detail">VARIANT columns<br>FLATTEN JSON<br>JSON/Avro/Parquet</div>
+      </div>
+      <div class="box b-cyan">
+        <div class="box-title">🔄 Snowpipe</div>
+        <div class="box-detail">Auto-ingest<br>COPY INTO<br>Stage → Table</div>
+      </div>
+      <div class="box b-cyan">
+        <div class="box-title">📊 Materialized Views</div>
+        <div class="box-detail">MV_FRAUD_SUMMARY<br>Auto-refresh<br>Pre-computed agg</div>
+      </div>
+      <div class="box b-cyan">
+        <div class="box-title">🔗 Data Sharing</div>
+        <div class="box-detail">Secure shares<br>Reader accounts<br>Marketplace</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 7: Security (parallel) -->
+  <div class="layer layer-sec">
+    <div class="layer-title">🔒 Layer 7 – Security & Governance (Cross-Cutting)</div>
+    <div class="boxes">
+      <div class="box b-red">
+        <div class="box-title">👑 RBAC</div>
+        <div class="box-detail">SYSADMIN → CLAIMS_MANAGER → DATA_STEWARD → ANALYST</div>
+      </div>
+      <div class="box b-red">
+        <div class="box-title">🎭 Data Masking</div>
+        <div class="box-detail">Dynamic masking on<br>annual_income, credit_score<br>Role-based reveal</div>
+      </div>
+      <div class="box b-red">
+        <div class="box-title">🔐 Row-Level Security</div>
+        <div class="box-detail">Region-based RLS<br>Row access policies<br>Analyst isolation</div>
+      </div>
+      <div class="box b-red">
+        <div class="box-title">📋 Data Dictionary</div>
+        <div class="box-detail">PII flagging<br>Column metadata<br>Lineage tracking</div>
+      </div>
+      <div class="box b-red">
+        <div class="box-title">🔑 MFA / SSO</div>
+        <div class="box-detail">Multi-factor auth<br>SSO integration<br>Audit logging</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">↓ Serve</div>
+
+  <!-- Layer 8: Visualization -->
+  <div class="layer layer-viz">
+    <div class="layer-title">Layer 8 – Analytics & Visualization</div>
+    <div class="boxes">
+      <div class="box b-orange">
+        <div class="box-title">📈 Dashboard</div>
+        <div class="box-detail">KPI cards<br>Fraud trend charts<br>Region heatmaps<br>Matplotlib/Streamlit</div>
+      </div>
+      <div class="box b-orange">
+        <div class="box-title">🔍 Self-Service BI</div>
+        <div class="box-detail">Power BI / Tableau<br>Snowflake connector<br>Live reports</div>
+      </div>
+      <div class="box b-orange">
+        <div class="box-title">⚡ Real-Time Alerts</div>
+        <div class="box-detail">Spark Streaming<br>Fraud alert console<br>High-risk notifications</div>
+      </div>
+      <div class="box b-orange">
+        <div class="box-title">📊 Ad-hoc SQL</div>
+        <div class="box-detail">Snowflake UI<br>CTEs + Window Fns<br>ROLLUP / CUBE</div>
+      </div>
+      <div class="box b-orange">
+        <div class="box-title">📑 Scheduled Reports</div>
+        <div class="box-detail">Airflow-triggered<br>PDF/email delivery<br>Monthly risk report</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#1F6FEB;"></div>Data Warehouse / Sources</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#238636;"></div>Ingestion / ETL</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#6E40C9;"></div>Staging Layer</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#E3B341;"></div>Processing (Spark)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#29BBE3;"></div>Snowflake Cloud</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#DA3633;"></div>Security & Governance</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#F78166;"></div>Visualization</div>
+  </div>
+
+  <p style="text-align:center; color:#8B949E; font-size:11px; margin-top:10px;">
+    Insurance Claim Risk Analytics – Project 9 | Wipro DAI-DATA Group 1 Training | February 2026
+  </p>
+</div>
+</body>
+</html>

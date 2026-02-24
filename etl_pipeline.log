@@ -1,0 +1,63 @@
+2026-02-24 17:07:13,766 [INFO] insurance_etl – ============================================================
+2026-02-24 17:07:13,766 [INFO] insurance_etl – Insurance ETL Pipeline – START
+2026-02-24 17:07:13,767 [INFO] insurance_etl – ============================================================
+2026-02-24 17:07:13,767 [INFO] insurance_etl – ▶ Starting: extract_csv
+2026-02-24 17:07:13,776 [INFO] insurance_etl – Extracted 1,000 rows from dim_customers.csv
+2026-02-24 17:07:13,776 [INFO] insurance_etl – [AUDIT] extract_csv | rows=1000 | ts=2026-02-24T17:07:13.776837
+2026-02-24 17:07:13,776 [INFO] insurance_etl – ✔ Completed: extract_csv in 0.01s
+2026-02-24 17:07:13,777 [INFO] insurance_etl – ▶ Starting: extract_csv
+2026-02-24 17:07:13,784 [INFO] insurance_etl – Extracted 1,500 rows from fact_policies.csv
+2026-02-24 17:07:13,784 [INFO] insurance_etl – [AUDIT] extract_csv | rows=1500 | ts=2026-02-24T17:07:13.784949
+2026-02-24 17:07:13,785 [INFO] insurance_etl – ✔ Completed: extract_csv in 0.01s
+2026-02-24 17:07:13,785 [INFO] insurance_etl – ▶ Starting: extract_csv
+2026-02-24 17:07:13,798 [INFO] insurance_etl – Extracted 3,000 rows from fact_claims.csv
+2026-02-24 17:07:13,798 [INFO] insurance_etl – [AUDIT] extract_csv | rows=3000 | ts=2026-02-24T17:07:13.798669
+2026-02-24 17:07:13,798 [INFO] insurance_etl – ✔ Completed: extract_csv in 0.01s
+2026-02-24 17:07:13,798 [INFO] insurance_etl – ▶ Starting: extract_csv
+2026-02-24 17:07:13,800 [INFO] insurance_etl – Extracted 50 rows from dim_agents.csv
+2026-02-24 17:07:13,800 [INFO] insurance_etl – [AUDIT] extract_csv | rows=50 | ts=2026-02-24T17:07:13.800703
+2026-02-24 17:07:13,800 [INFO] insurance_etl – ✔ Completed: extract_csv in 0.00s
+2026-02-24 17:07:13,800 [INFO] insurance_etl – ▶ Starting: extract_csv
+2026-02-24 17:07:13,802 [INFO] insurance_etl – Extracted 5 rows from dim_policy_types.csv
+2026-02-24 17:07:13,802 [INFO] insurance_etl – [AUDIT] extract_csv | rows=5 | ts=2026-02-24T17:07:13.802392
+2026-02-24 17:07:13,802 [INFO] insurance_etl – ✔ Completed: extract_csv in 0.00s
+2026-02-24 17:07:13,802 [INFO] insurance_etl – ▶ Starting: extract_csv
+2026-02-24 17:07:13,808 [INFO] insurance_etl – Extracted 1,827 rows from dim_date.csv
+2026-02-24 17:07:13,808 [INFO] insurance_etl – [AUDIT] extract_csv | rows=1827 | ts=2026-02-24T17:07:13.808728
+2026-02-24 17:07:13,808 [INFO] insurance_etl – ✔ Completed: extract_csv in 0.01s
+2026-02-24 17:07:13,809 [INFO] insurance_etl – ▶ Starting: transform_customers
+2026-02-24 17:07:13,816 [INFO] insurance_etl – [AUDIT] transform_customers | rows=1000 | ts=2026-02-24T17:07:13.816545
+2026-02-24 17:07:13,816 [INFO] insurance_etl – ✔ Completed: transform_customers in 0.01s
+2026-02-24 17:07:13,817 [INFO] insurance_etl – ▶ Starting: transform_policies
+2026-02-24 17:07:13,834 [INFO] insurance_etl – [AUDIT] transform_policies | rows=1500 | ts=2026-02-24T17:07:13.834443
+2026-02-24 17:07:13,834 [INFO] insurance_etl – ✔ Completed: transform_policies in 0.02s
+2026-02-24 17:07:13,834 [INFO] insurance_etl – ▶ Starting: transform_claims
+2026-02-24 17:07:13,853 [INFO] insurance_etl – [AUDIT] transform_claims | rows=3000 | ts=2026-02-24T17:07:13.853843
+2026-02-24 17:07:13,854 [INFO] insurance_etl – ✔ Completed: transform_claims in 0.02s
+2026-02-24 17:07:13,854 [INFO] insurance_etl – ✔ DQ passed: dim_customers (1,000 rows)
+2026-02-24 17:07:13,855 [INFO] insurance_etl – ✔ DQ passed: fact_policies (1,500 rows)
+2026-02-24 17:07:13,856 [INFO] insurance_etl – ✔ DQ passed: fact_claims (3,000 rows)
+2026-02-24 17:07:13,857 [INFO] insurance_etl – ▶ Starting: load_batch
+2026-02-24 17:07:13,857 [INFO] insurance_etl – ▶ Starting: load_to_csv
+2026-02-24 17:07:13,866 [INFO] insurance_etl – Loaded 1,000 rows → etl_output/dwh_dim_customers.csv
+2026-02-24 17:07:13,866 [INFO] insurance_etl – ✔ Completed: load_to_csv in 0.01s
+2026-02-24 17:07:13,866 [INFO] insurance_etl – ▶ Starting: load_to_csv
+2026-02-24 17:07:13,877 [INFO] insurance_etl – Loaded 1,500 rows → etl_output/dwh_fact_policies.csv
+2026-02-24 17:07:13,877 [INFO] insurance_etl – ✔ Completed: load_to_csv in 0.01s
+2026-02-24 17:07:13,878 [INFO] insurance_etl – ▶ Starting: load_to_csv
+2026-02-24 17:07:13,910 [INFO] insurance_etl – Loaded 3,000 rows → etl_output/dwh_fact_claims.csv
+2026-02-24 17:07:13,910 [INFO] insurance_etl – ✔ Completed: load_to_csv in 0.03s
+2026-02-24 17:07:13,910 [INFO] insurance_etl – ▶ Starting: load_to_csv
+2026-02-24 17:07:13,911 [INFO] insurance_etl – Loaded 50 rows → etl_output/dwh_dim_agents.csv
+2026-02-24 17:07:13,912 [INFO] insurance_etl – ✔ Completed: load_to_csv in 0.00s
+2026-02-24 17:07:13,912 [INFO] insurance_etl – ▶ Starting: load_to_csv
+2026-02-24 17:07:13,913 [INFO] insurance_etl – Loaded 5 rows → etl_output/dwh_dim_policy_type.csv
+2026-02-24 17:07:13,913 [INFO] insurance_etl – ✔ Completed: load_to_csv in 0.00s
+2026-02-24 17:07:13,913 [INFO] insurance_etl – ▶ Starting: load_to_csv
+2026-02-24 17:07:13,918 [INFO] insurance_etl – Loaded 1,827 rows → etl_output/dwh_dim_date.csv
+2026-02-24 17:07:13,919 [INFO] insurance_etl – ✔ Completed: load_to_csv in 0.01s
+2026-02-24 17:07:13,919 [INFO] insurance_etl – ✔ Completed: load_batch in 0.06s
+2026-02-24 17:07:13,919 [INFO] insurance_etl – 
+============================================================
+Pipeline completed in 0.2s
+============================================================
