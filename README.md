@@ -210,7 +210,7 @@ Interactive architecture diagram: [`docs/architecture_diagram.html`](docs/archit
 
 ## 👤 Author
 
-**Student Name:** *(Add your name)*  
+**Student Name:** *(Reshav Kumar Choudhary)*  
 **Batch:** Wipro DAI-DATA Group 1  
 **Institute:** ITER, SOA University  
 **Training Period:** February 2026  
